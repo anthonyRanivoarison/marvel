@@ -1,0 +1,22 @@
+{
+  "name": "marvel-api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "",
+    "start": "node main.js"
+  },
+  "keywords": [
+    "API",
+    "backend",
+    "server"
+  ],
+  "author": "anthonio",
+  "license": "ISC",
+  "description": "This's the server marvel application",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
