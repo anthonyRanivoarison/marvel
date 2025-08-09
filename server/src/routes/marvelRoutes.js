@@ -20,9 +20,9 @@ marvelRoutes.post("/", createNewCharacter)
 marvelRoutes.get("/:id", getCharacterByID)
 
 // PUT /characters/:id ==> Update a character by ID
-marvelRoutes.put("/", updateCharacter)
+marvelRoutes.put("/:id", updateCharacter)
 
 // DELETE /characters/:id ==> Delete a character by ID
-marvelRoutes.delete("/", deleteCharacter)
+marvelRoutes.delete("/:id", deleteCharacter)
 
 export default marvelRoutes;

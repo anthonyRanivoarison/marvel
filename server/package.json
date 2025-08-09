@@ -1,22 +1,21 @@
 {
-  "name": "marvel-api",
-  "version": "1.0.0",
+  "name": "server2",
+  "module": "index.ts",
   "type": "module",
+  "private": true,
   "scripts": {
-    "test": "",
-    "start": "node main.js"
+    "dev": "bun run index.ts"
   },
-  "keywords": [
-    "API",
-    "backend",
-    "server"
-  ],
-  "author": "anthonio",
-  "license": "ISC",
-  "description": "This's the server marvel application",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^5.0.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "pg": "^8.16.3"
+    "express": "^5.1.0"
   }
 }
