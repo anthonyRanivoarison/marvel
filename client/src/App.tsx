@@ -1,7 +1,16 @@
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import HomePage from "@/pages/HomePage.tsx";
+import CharacterPage from "@/pages/CharacterPage.tsx";
+import CharacterFormPage from "@/pages/CharacterFormPage.tsx";
+
 export default function App() {
   return (
-    <div className="h-screen w-full flex items-center justify-center">
-      <h1 className="text-blue-500 font-semibold text-3xl">Marvel Application coming soon...</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/character/:id" element={<CharacterPage/>}/>
+        <Route path="/form" element={<CharacterFormPage />}/>
+      </Routes>
+    </Router>
   );
 }
