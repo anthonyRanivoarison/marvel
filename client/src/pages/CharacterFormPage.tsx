@@ -9,7 +9,7 @@ const CharacterFormPage = () => {
   const [realName, setRealName] = useState('');
   const [universe, setUniverse] = useState('');
 
-  const handleSubmit = (e: any): | void => {
+  const handleSubmit = (e: Event): | void => {
     e.preventDefault();
     const {data: string, isLoading, isError} = useQuery({
       queryKey: ["characters", name],
