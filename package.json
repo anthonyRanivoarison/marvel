@@ -1,14 +1,17 @@
 {
   "name": "marvel",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This is an application that allow us to make CRUD Operations with marvel",
   "scripts": {
     "test": "",
-    "dev": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\""
+    "dev": "concurrently \"npm run dev --prefix client\" \"bun run dev --prefix server\""
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "marvel",
+    "application",
+    "full-stack"
+  ],
+  "author": "anthonio",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.2.0"
