@@ -50,10 +50,11 @@ export const getCharacterByID = (req: Request, res: Response): void | Response =
 
   readFile(file, "utf8", (err, data) => {
     if (err) res.status(500).send(err)
+    if (!data) return res.status(500).send("No data found");
 
-    const characters = JSON.parse(data).characters;
+    const characters: Character[] = JSON.parse(data.toString());
 
-    const character: Character | null = characters.find((char: Character) => char.id === ID);
+    const character: Character | undefined = characters.find((char: Character) => char.id === ID);
 
     return character ? res.status(200).json(character) : res.status(500).json({error: "No character found"});
   })
