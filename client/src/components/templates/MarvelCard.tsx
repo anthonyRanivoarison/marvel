@@ -19,11 +19,9 @@ const MarvelCard: React.FC<MarvelCardProps> = ({character}) => {
 
   const gradientClass = `bg-gradient-to-r from-${baseColor}-400 to-${baseColor}-600`;
 
-  const textColorClass = baseColor === "black" ? "text-white" : "text-gray-900";
-
   return (
     <Link to={`/character/${character.id}`}>
-      <Card className={`${gradientClass} ${textColorClass}  bg-${baseColor}-900 hover:brightness-110 transition`}>
+      <Card className={`${gradientClass} text-black  bg-${baseColor}-900 transition`}>
         <CardHeader className="font-bold">{character.name}</CardHeader>
         <CardContent>
           <p><span className="font-semibold">Alias: </span>{character.realName}</p>

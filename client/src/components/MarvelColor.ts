@@ -8,7 +8,7 @@ export const getBaseColor = (name: string): string => {
   if (lowerName.includes("thor")) return "indigo";
   if (lowerName.includes("black widow")) return "gray";
   if (lowerName.includes("doctor strange")) return "purple";
-  if (lowerName.includes("black panther")) return "black";
+  if (lowerName.includes("black panther")) return "gray";
   if (lowerName.includes("scarlet witch")) return "pink";
   return "gray";
 };
