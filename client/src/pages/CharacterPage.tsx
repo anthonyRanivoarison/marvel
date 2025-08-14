@@ -1,4 +1,4 @@
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
 import type {Character} from "@/components/templates/MarvelCard.tsx";
@@ -18,8 +18,7 @@ const CharacterPage = () => {
     }
   });
 
-  const marvelColor: string = getBaseColor(character.name);
-  console.log(marvelColor);
+  const redirectToFormPage = (id: number): string => window.location.href = `/form?edit=${id}`;
 
   const deleteCharacter = async (id: number | string): Promise<void> => {
     if (!id) console.log("Missing ID")
@@ -29,27 +28,28 @@ const CharacterPage = () => {
   }
 
   if (isLoading) return <p>Loading...</p>;
-  if (isError || !character) return <p>Error loading characters</p>;
+  if (isError || !character) return <p>Error loading character informations</p>;
 
   return (
-    <div className={`min-h-screen w-full bg-${marvelColor}-50`}>
-      <Link
-        to="/"
-        className="inline-flex items-center gap-2 border text-sm border-white/50 rounded bg-white/20 backdrop-blur px-4 py-2"
+    <div className={`w-full bg-${getBaseColor(character.name)}-200 p-4`}>
+      <Button
+        onClick={() => window.location.href = "/"}
       >
-        <Button variant="outline" className="bg-gradient-to-r from-blue-300 to-purple-50">
-          <ArrowLeft size={15}/>
-          Go back
-        </Button>
-      </Link>
-
-      <div className="flex items-center justify-center">
+        <ArrowLeft size={15}/>
+        Retour
+      </Button>
+      <div className="flex items-center justify-center h-screen">
         <Card className="max-w-2xl w-md shadow-xl hover:shadow-2xl transition-shadow duration-300">
-        <span className="flex items-center j-ustify-center text-xl">
-          <CardTitle
-            className="font-semibold bg-blue-500 rounded-full h-12 w-12 p-4">{character.name.charAt(0)}</CardTitle>
-          <CardTitle className="text-xl w-full font-bold text-center">{character.name}</CardTitle>
-        </span>
+          <div className="flex items-center gap-4 text-xl justify-center">
+            <CardTitle
+              className={`flex items-center justify-center font-semibold bg-${getBaseColor(character.name)}-500 rounded-full h-12 w-12 p-4 text-white`}
+            >
+              {character.name.charAt(0)}
+            </CardTitle>
+            <CardTitle className="flex-1 font-bold text-left">
+              {character.name}
+            </CardTitle>
+          </div>
           <CardContent className="space-y-2 text-gray-700">
             <p><span className="font-semibold">Alias:</span> {character.realName}</p>
             <p><span className="font-semibold">Universe:</span> {character.universe}</p>
@@ -58,6 +58,7 @@ const CharacterPage = () => {
                 variant="outline"
                 size="sm"
                 className="flex items-center"
+                onClick={() => redirectToFormPage(character.id)}
               >
                 Edit
                 <Edit2/>
