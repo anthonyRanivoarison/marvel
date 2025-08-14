@@ -18,7 +18,7 @@ const file: string = join(__dirname, "../data/characters.json");
 export const getCharacters = (req: Request, res: Response): void => {
   readFile(file, "utf8", (err, data) => {
     if (err) res.status(500).send(err)
-    res.json(JSON.parse(data))
+    res.json(JSON.parse(data).characters)
   })
 }
 
@@ -41,24 +41,29 @@ export const createNewCharacter = (req: Request, res: Response): void => {
   })
 }
 
-export const getCharacterByID = (req: Request, res: Response): void | Response => {
-  const ID = req.params.id && !isNaN(parseInt(req.params.id))
-    ? parseInt(req.params.id)
-    : null;
+export const getCharacterByID = (req: Request, res: Response): void => {
+  const ID = parseInt(req.params.id, 10);
 
-  if (ID === null || !ID) return res.status(400).send("ID parameter is missing or invalid");
+  if (Number.isNaN(ID)) {
+    res.status(400).send("ID parameter is missing or invalid");
+    return;
+  }
 
   readFile(file, "utf8", (err, data) => {
-    if (err) res.status(500).send(err)
+    if (err) return res.status(500).send(err);
     if (!data) return res.status(500).send("No data found");
 
-    const characters: Character[] = JSON.parse(data.toString());
+    const parsed = JSON.parse(data);
+    const characters: Character[] = parsed.characters || [];
 
-    const character: Character | undefined = characters.find((char: Character) => char.id === ID);
+    const character = characters.find((char) => Number(char.id) === ID);
 
-    return character ? res.status(200).json(character) : res.status(500).json({error: "No character found"});
-  })
-}
+    if (!character) return res.status(404).json({ error: "No character found" });
+
+    return res.status(200).json(character);
+  });
+
+};
 
 export const updateCharacter = (req: Request, res: Response): void | Response => {
   const characterUpdated: Partial<Character> = req.body;
@@ -70,22 +75,15 @@ export const updateCharacter = (req: Request, res: Response): void | Response =>
     if (err) return res.status(500).json({error: err.message});
     if (!data) return res.status(500).json({error: "No data found"});
 
-    let parsed;
-    try {
-      parsed = JSON.parse(data);
-    } catch (parseErr) {
-      res.status(500).json({error: "Error parsing data"});
-      return;
-    }
+    const characters: Character[] = JSON.parse(data) || [];
 
-    const characters: Character[] = parsed.characters ?? [];
+    const character = characters.filter((char: Character) => char.id === ID);
+    res.json([character, ID, characters])
 
-    const index = characters.findIndex((character) => character.id === ID);
-
-    if (index === -1) {
-      res.status(404).json({error: "Character not found"});
-      return;
-    }
+    // if (index === -1) {
+    //   res.status(404).json({error: "Character not found"});
+    //   return;
+    // }
     // characters[index] = {...characters[index], ...characterUpdated};
 
     writeFile(file, JSON.stringify({characters}, null, 2), "utf8", (writeErr) => {
@@ -94,11 +92,10 @@ export const updateCharacter = (req: Request, res: Response): void | Response =>
         return;
       }
 
-      res.status(200).json({message: "Character updated", character: characters[index]});
+      // res.status(200).json({message: "Character updated", character: characters[index]});
     });
   });
 };
-
 
 export const deleteCharacter = (req: Request, res: Response): void | Response => {
   const ID = req.params.id && !isNaN(parseInt(req.params.id)) ? parseInt(req.params.id) : null;
