@@ -2,6 +2,7 @@ import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
 import type {Character} from "@/components/templates/MarvelCard";
 import MarvelCard from "@/components/templates/MarvelCard";
+import Spinner from "@/components/templates/Spinner.tsx";
 
 const fetchMarvels = async () => {
   const response = await axios.get("http://localhost:8800/characters");
@@ -14,7 +15,7 @@ const MarvelCardsTemplate = () => {
     queryFn: fetchMarvels,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <div className="flex min-h-screen w-full items-center justify-center"> <Spinner size={30}/> </div>;
   else if (isError || !characters) return <p>Error loading characters</p>;
 
   return (

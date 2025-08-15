@@ -21,8 +21,8 @@ const MarvelCard: React.FC<MarvelCardProps> = ({character}) => {
 
   return (
     <Link to={`/character/${character.id}`}>
-      <Card className={`${gradientClass} text-black  bg-${baseColor}-900 transition`}>
-        <CardHeader className="font-bold">{character.name}</CardHeader>
+      <Card className={`${gradientClass} text-white  bg-${baseColor}-500`}>
+        <CardHeader className="font-bold dc-font">{character.name}</CardHeader>
         <CardContent>
           <p><span className="font-semibold">Alias: </span>{character.realName}</p>
           <p><span className="font-semibold">Univers: </span>{character.universe}</p>
