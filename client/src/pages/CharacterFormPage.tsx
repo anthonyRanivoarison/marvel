@@ -49,7 +49,7 @@ const CharacterFormPage = () => {
         if (res.status === 200) window.location.href = `../character/${idForEdit}?msg=updated`;
       } else {
         const res = await axios.post(apiUrl, {name, realName, universe});
-        if (res.status === 200) window.location.href = `../character/${idForEdit}?msg=created`;
+        if (res.status === 200) window.location.href = `../../?msg=created`;
       }
     } catch (error) {
       console.error("Error sending data", error);

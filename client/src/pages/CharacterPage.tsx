@@ -39,7 +39,7 @@ const CharacterPage = () => {
         open={open}
         setOpen={setOpen}
         title="Do you wanna delete this character ?"
-        description="It's an inversible action"
+        description="It's an irreversible action"
         onConfirm={() => deleteCharacter(character.id)}
         onCancel={() => console.log("Canceled !")}
       />
@@ -51,7 +51,7 @@ const CharacterPage = () => {
         Retour
       </Button>
       <div className="flex items-center justify-center">
-        <Card className="max-w-2xl w-md shadow-xl hover:shadow-2xl transition-shadow duration-300">
+        <Card className="max-w-2xl w-md shadow-xl hover:shadow-2xl transition-shadow duration-300 mt-24">
           <div className="flex items-center gap-4 text-xl justify-center px-4">
             <CardTitle
               className={`flex items-center justify-center font-semibold bg-${getBaseColor(character.name)}-500 rounded-full h-12 w-12 p-4 text-white`}

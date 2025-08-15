@@ -27,33 +27,24 @@ export const getCharacters = (req: Request, res: Response): void => {
 }
 
 export const createNewCharacter = (req: Request, res: Response): void => {
-  const character: Character = req.body
+  const characterToCreate: Character = req.body
 
-  if (!character) res.status(400).json({error: "No character found to create"})
+  readFile(file, "utf8", (err, data) => {
+    if (err) res.status(500).send(err)
+    const characters = JSON.parse(data).characters;
 
-  readFile(file, (err, data): void | Response => {
-    if (err) return res.status(500).send(err);
-    if (!data) return res.status(500).send("No data found");
+    const id = characters.length > 0
+      ? Math.max(...characters.map(c => c.id || 0)) + 1
+      : 1;
 
-    let characters: Character[] = [];
+    const newCharacter = { id, ...characterToCreate };
+    characters.push(newCharacter);
 
-    try {
-      const json = JSON.parse(data.toString("utf8"));
-      if (Array.isArray(json.characters)) {
-        characters = json.characters;
-      }
-    } catch (e) {
-      return res.status(500).send("Invalid JSON");
-    }
-
-    characters.push(character);
-
-    writeFile(file, JSON.stringify({ characters }, null, 2), (err) => {
+    writeFile(file, JSON.stringify({characters}, null, 2), (err) => {
       if (err) return res.status(500).send(err);
       res.status(200).send("Character added!");
     });
-  });
-
+  })
 }
 
 export const getCharacterByID = (req: Request, res: Response): void => {
@@ -117,11 +108,11 @@ export const deleteCharacter = (req: Request, res: Response): void | Response =>
   readFile(file, "utf8", (err, data) => {
     if (err) res.status(500).send(err)
 
-    const characters: Character[] = JSON.parse(data).characters;
+    const allCharacters: Character[] = JSON.parse(data).characters;
 
-    const characterToDelete: Character[] = characters.filter((character: Character) => character.id !== ID);
+    const newCharacters: Character[] = allCharacters.filter((character: Character) => character.id !== ID);
 
-    writeFile(file, JSON.stringify(characterToDelete), (err) => {
+    writeFile(file, JSON.stringify({ characters: newCharacters }, null, 2), (err) => {
       if (err) res.status(500).send(err)
       res.status(200).send("Characters deleted")
     })
