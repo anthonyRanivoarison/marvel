@@ -10,6 +10,10 @@ interface Character {
   universe: string;
 }
 
+interface CharacterObject {
+  characters: Character[];
+}
+
 const __filename: string = fileURLToPath(import.meta.url);
 const __dirname: string = dirname(__filename);
 
@@ -31,14 +35,25 @@ export const createNewCharacter = (req: Request, res: Response): void => {
     if (err) return res.status(500).send(err);
     if (!data) return res.status(500).send("No data found");
 
-    const characters: Character[] = JSON.parse(data.toString("utf8")).characters;
-    characters.push(character)
+    let characters: Character[] = [];
 
-    writeFile(file, JSON.stringify(characters), "utf8", (err) => {
-      if (err) res.status(500).send(err)
-      res.status(201).send("Character created successfully")
-    })
-  })
+    try {
+      const json = JSON.parse(data.toString("utf8"));
+      if (Array.isArray(json.characters)) {
+        characters = json.characters;
+      }
+    } catch (e) {
+      return res.status(500).send("Invalid JSON");
+    }
+
+    characters.push(character);
+
+    writeFile(file, JSON.stringify({ characters }, null, 2), (err) => {
+      if (err) return res.status(500).send(err);
+      res.status(200).send("Character added!");
+    });
+  });
+
 }
 
 export const getCharacterByID = (req: Request, res: Response): void => {
@@ -58,7 +73,7 @@ export const getCharacterByID = (req: Request, res: Response): void => {
 
     const character = characters.find((char) => Number(char.id) === ID);
 
-    if (!character) return res.status(404).json({ error: "No character found" });
+    if (!character) return res.status(404).json({error: "No character found"});
 
     return res.status(200).json(character);
   });
@@ -75,24 +90,21 @@ export const updateCharacter = (req: Request, res: Response): void | Response =>
     if (err) return res.status(500).json({error: err.message});
     if (!data) return res.status(500).json({error: "No data found"});
 
-    const characters: Character[] = JSON.parse(data) || [];
+    const charObject: CharacterObject = JSON.parse(data) || {characters: []};
 
-    const character = characters.filter((char: Character) => char.id === ID);
-    res.json([character, ID, characters])
+    const index = charObject.characters.findIndex((char: Character) => char.id === ID);
 
-    // if (index === -1) {
-    //   res.status(404).json({error: "Character not found"});
-    //   return;
-    // }
-    // characters[index] = {...characters[index], ...characterUpdated};
+    if (index === -1) return res.status(404).json({error: "Character not found"});
 
-    writeFile(file, JSON.stringify({characters}, null, 2), "utf8", (writeErr) => {
-      if (writeErr) {
-        res.status(500).json({error: writeErr.message});
-        return;
-      }
+    charObject.characters[index] = {
+      ...charObject.characters[index],
+      ...characterUpdated
+    };
 
-      // res.status(200).json({message: "Character updated", character: characters[index]});
+    writeFile(file, JSON.stringify(charObject, null, 2), "utf8", (writeErr) => {
+      if (writeErr) return res.status(500).json({error: writeErr.message});
+
+      res.status(200).json({message: "Character updated successfully"});
     });
   });
 };
