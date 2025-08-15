@@ -7,6 +7,7 @@ import {useLocation} from "react-router-dom";
 import type {Character} from "@/components/templates/MarvelCard";
 import {Globe, User, VenetianMask} from "lucide-react";
 import {getBaseColor} from "@/components/MarvelColor.ts";
+import Spinner from "@/components/templates/Spinner.tsx";
 
 const CharacterFormPage = () => {
   const location = useLocation();
@@ -44,23 +45,18 @@ const CharacterFormPage = () => {
 
     try {
       if (isEdit) {
-        await axios.put(apiUrl, {
-          id: parseInt(idForEdit!),
-          name,
-          realName,
-          universe,
-        });
-        console.log("Character updated");
+        const res = await axios.put(apiUrl, {id: parseInt(idForEdit!), name, realName, universe});
+        if (res.status === 200) window.location.href = `../character/${idForEdit}?msg=updated`;
       } else {
-        await axios.post(apiUrl, {name, realName, universe});
-        console.log("Character created");
+        const res = await axios.post(apiUrl, {name, realName, universe});
+        if (res.status === 200) window.location.href = `../character/${idForEdit}?msg=created`;
       }
     } catch (error) {
       console.error("Error sending data", error);
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <div className="flex min-h-screen w-full items-center justify-center"> <Spinner size={30}/> </div>;
   if (isError) return <p>Error loading character</p>;
 
   const baseColor = getBaseColor(name || "default");
